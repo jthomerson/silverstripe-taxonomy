@@ -44,10 +44,6 @@ class VocabularyTerm extends DataObject {
       'MachineName',
    );
 
-   public function getFullTermTitle() {
-      return sprintf('%s : %s', $this->Vocabulary()->Name, $this->Term);
-   }
-
    public function getChildrenTerms() {
       return implode(', ', $this->Children()->map('ID', 'Term'));
    }
@@ -73,8 +69,21 @@ class VocabularyTerm extends DataObject {
       return $fields;
    }
 
+   public function getFullTermTitle() {
+      return sprintf('%s : %s', $this->Vocabulary()->Name, $this->Term);
+   }
+
    public function getParentsTerms() {
       return implode(', ', $this->Parents()->map('ID', 'Term'));
+   }
+
+   public function Summary() {
+      $summary = $this->getFullTermTitle();
+      $parents = $this->getParentsTerms();
+      if (!empty($parents)) {
+         $summary .= sprintf('<em>' . _t('VocabularyTerm.Summary.Parents', ' (Parent terms: %s)') . '</em>', $parents);
+      }
+      return $summary;
    }
 
 }

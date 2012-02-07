@@ -19,11 +19,14 @@ class VocabularyTermClassifiable extends DataObjectDecorator {
    }
 
    public function updateCMSFields(FieldSet &$fields) {
-      //$fields->addFieldToTab('Root.Content.Main', new ReadonlyField('FirstPublishedDate', 'First Published (online)'), 'Title');
-      $termsSort = '"Vocabulary"."Name", "VocabularyTerm"."Term"';
-      $termsJoin = 'JOIN "Vocabulary" ON "Vocabulary"."ID" = "VocabularyTerm"."VocabularyID"';
-      $terms = DataObject::get('VocabularyTerm', '', $termsSort, $termsJoin)->map('ID', 'FullTermTitle');
-      $fields->addFieldToTab('Root.Taxonomy', new CheckboxSetField('VocabularyTerms', 'Vocabulary Terms', $terms));
+      $fields->addFieldToTab('Root.Taxonomy', new ManyManyPickerField(
+         $this->owner,
+        'VocabularyTerms',
+        _t('Vocabulary.Terms.Label', 'Vocabulary Terms'),
+        array(
+           'ShowPickedInSearch' => false,
+        )
+      ));
    }
 
 }
